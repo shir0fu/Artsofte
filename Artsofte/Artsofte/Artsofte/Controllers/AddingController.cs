@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Artsofte.Controllers;
 
-public class HomeController : Controller
+public class AddingController : Controller
 {
     private readonly IEmployeeService _employeeService;
 
-    public HomeController(IEmployeeService employeeService)
+    public AddingController(IEmployeeService employeeService)
     {
         _employeeService = employeeService;
     }
@@ -16,5 +16,4 @@ public class HomeController : Controller
     {
         return View(_employeeService.GetEmployees());
     }
-
 }
