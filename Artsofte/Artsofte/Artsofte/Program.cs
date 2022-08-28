@@ -15,15 +15,6 @@ var app = builder.Build();
 
 app.MapControllerRoute(
     name: "default",
-pattern: "{controller=Home}/{action=GetEmployeesAsync}");
-
-app.MapControllerRoute(
-name: "default",
-pattern: "{controller=Home}/{action=AddEmployee}");
-
-app.MapControllerRoute(
-name: "default",
-pattern: "{controller=Home}/{action=DeleteEmployeeAsync}/{id?}");
-
+pattern: "{controller=Home}/{action=Index}");
 
 app.Run();

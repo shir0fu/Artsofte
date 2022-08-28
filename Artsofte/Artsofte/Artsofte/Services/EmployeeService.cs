@@ -9,9 +9,10 @@ namespace Artsofte.Services;
 
 public interface IEmployeeService
 {
+    public Task<UpdateEmployeeDTO> GetEmployeeByIdAsync(int id);
     public Task<List<EmployeeDTO>> GetEmployeesAsync();
-    public bool DeleteEmployee(int employeeId);
-    public bool UpdateEmployee(Employee employee);
+    public Task<bool> DeleteEmployeeAsync(int employeeId);
+    public Task<bool> UpdateEmployeeAsync(UpdateEmployeeDTO employee);
     public Task<bool> AddEmployeeAsync(CreateEmployeeDTO employee);
 }
 
@@ -24,8 +25,45 @@ public class EmployeeService : IEmployeeService
         db = context;
     }
 
+    public async Task<UpdateEmployeeDTO> GetEmployeeByIdAsync(int id)
+    {
+        UpdateEmployeeDTO employee = new UpdateEmployeeDTO();
+        var conn = db.Database.GetDbConnection();
+        try
+        {
+            await conn.OpenAsync();
+            using (var command = conn.CreateCommand())
+            {
+                string query = $"GetEmployeeById @identy = {id}";
+                command.CommandText = query;
+                DbDataReader reader = await command.ExecuteReaderAsync();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        var row = new UpdateEmployeeDTO { Id = reader.GetInt32(0), Name = reader.GetString(1), Surname = reader.GetString(2), Age = reader.GetInt32(3), Gender = reader.GetString(4), Departament = reader.GetString(5), PogrammingLanguage = reader.GetString(6) };
+                        employee = row;
+                    }
+                }
+                reader.Dispose();
+            }
+        }
+        finally
+        {
+            conn.Close();
+        }
+
+        return employee;
+    }
     public async Task<bool> AddEmployeeAsync(CreateEmployeeDTO employee)
     {
+        Type check = employee.Age.GetType();
+        if (!check.Equals(typeof(int)))
+        {
+            return false;
+        }
+
         List<SqlParameter> parms = new List<SqlParameter>
         {
             new SqlParameter { ParameterName = "@name", Value = employee.Name },
@@ -54,9 +92,27 @@ public class EmployeeService : IEmployeeService
         }
     }
 
-    public bool DeleteEmployee(int employeeId)
+    public async Task<bool> DeleteEmployeeAsync(int employeeId)
     {
-        throw new NotImplementedException();
+        SqlParameter sqlParameter = new SqlParameter { ParameterName = "@identy", Value = employeeId };
+        try
+        {
+            var res = db.Database.ExecuteSqlRaw("EXEC DeleteEmployee @identy", sqlParameter);
+            if (res == 1)
+            {
+                await db.SaveChangesAsync();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch
+        {
+            return false;
+        }
+    
     }
 
     public async Task<List<EmployeeDTO>> GetEmployeesAsync()
@@ -76,7 +132,7 @@ public class EmployeeService : IEmployeeService
                 {
                     while (reader.Read())
                     {
-                        var row = new EmployeeDTO { Id = Convert.ToInt32(reader.GetString(0)), Name = reader.GetString(1), Surname = reader.GetString(2), Age = reader.GetInt32(3), Departament = reader.GetString(4), PogrammingLanguage = reader.GetString(5) };
+                        var row = new EmployeeDTO { Id = reader.GetInt32(0), Name = reader.GetString(1), Surname = reader.GetString(2), Age = reader.GetInt32(3), Departament = reader.GetString(4), PogrammingLanguage = reader.GetString(5) };
                         employees.Add(row);
                     }
                 }
@@ -91,8 +147,36 @@ public class EmployeeService : IEmployeeService
         return employees;
     }
 
-    public bool UpdateEmployee(Employee employee)
+    public async Task<bool> UpdateEmployeeAsync(UpdateEmployeeDTO employee)
     {
-        throw new NotImplementedException();
+
+        List<SqlParameter> parms = new List<SqlParameter>
+        {
+            new SqlParameter { ParameterName = "@identy", Value = employee.Id },
+            new SqlParameter { ParameterName = "@name", Value = employee.Name },
+            new SqlParameter { ParameterName = "@surName", Value = employee.Surname },
+            new SqlParameter { ParameterName = "@age", Value = employee.Age },
+            new SqlParameter { ParameterName = "@gender", Value = employee.Gender },
+            new SqlParameter { ParameterName = "@deparnamentName", Value = employee.Departament },
+            new SqlParameter { ParameterName = "@progLang", Value = employee.PogrammingLanguage }
+        };
+        try
+        {
+            var res = db.Database.ExecuteSqlRaw("EXEC UpdateEmployee @identy, @name, @surName, @age, @gender, @deparnamentName, @progLang", parms.ToArray());
+            if (res == 1)
+            {
+                await db.SaveChangesAsync();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch
+        {
+            return false;
+        }
     }
+
 }

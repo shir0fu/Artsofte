@@ -4,7 +4,7 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model IEnumerable<Artsofte.DTO.EmployeeDTO>
 
-<div class="text-center">
+<div>
     <h1>A list of employees</h1>
 
     <a href="/add">ADD</a>
@@ -27,11 +27,12 @@
                 <td>@item.Departament</td>
                 <td>@item.PogrammingLanguage</td>
                 <td>
-                    <form asp-controller="Group" asp-action="Delete" method="delete" asp-route-id="@item.Id">
+                    <form asp-controller="Home" asp-action="DeleteEmployee" method="post" asp-route-id="@item.Id">
                         <input type="submit" value="Delete" />
                     </form>
-                    <br/>
-                    Edit
+
+                    <a href="/edit/@item.Id">Change</a>
+
                 </td>
             </tr>
         }

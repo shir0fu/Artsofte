@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Edit Employee";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Artsofte.DTO.UpdateEmployeeDTO
+
+<div>
+    <h1>Employee data changes</h1>
+
+    <form asp-action="UpdateEmployee" asp-controller="Home" method="post">
+        <p>
+            Name <input placeholder="@Model.Name" type="text" asp-for="Name" />
+            <br />
+            Surname <input placeholder="@Model.Surname" type="text" asp-for="Surname" />
+            <br />
+            Age <input placeholder="@Model.Age" type="number" asp-for="Age" />
+            <br />
+            Gender <input placeholder="@Model.Gender" type="text" asp-for="Gender" />
+            <br />
+            Departament
+            <select asp-for="Departament">
+                <option value="Departament1">Departament1</option>
+                <option value="Departament2">Departament2</option>
+                <option value="Departament3">Departament3</option>
+                <option value="Departament4">Departament4</option>
+                <option value="Departament5">Departament5</option>
+            </select>
+            <br />
+            Programming Language
+            <select asp-for=PogrammingLanguage>
+                <option value="C#">C#</option>
+                <option value="PHP">PHP</option>
+                <option value="JS">JS</option>
+                <option value="Rust">Rust</option>
+                <option value="C++">C++</option>
+            </select>
+            <br />
+            <input type="submit" value="Add" /> <a href="/">Cancel</a>
+        </p>
+    </form>
+</div>
+
