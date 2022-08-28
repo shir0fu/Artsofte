@@ -3,7 +3,6 @@ using Artsofte.Models;
 using Artsofte.DTO;
 using System.Data.Common;
 using Microsoft.Data.SqlClient;
-using System.Collections.Generic;
 
 namespace Artsofte.Services;
 
@@ -73,6 +72,7 @@ public class EmployeeService : IEmployeeService
             new SqlParameter { ParameterName = "@deparnamentName", Value = employee.Departament },
             new SqlParameter { ParameterName = "@progLang", Value = employee.PogrammingLanguage }
         };
+
         try
         {
             var res = db.Database.ExecuteSqlRaw("EXEC AddEmployee @name, @surName, @age, @gender, @deparnamentName, @progLang", parms.ToArray());
@@ -112,7 +112,6 @@ public class EmployeeService : IEmployeeService
         {
             return false;
         }
-    
     }
 
     public async Task<List<EmployeeDTO>> GetEmployeesAsync()
@@ -143,7 +142,7 @@ public class EmployeeService : IEmployeeService
         {
             conn.Close();
         }
-        
+
         return employees;
     }
 
@@ -160,6 +159,7 @@ public class EmployeeService : IEmployeeService
             new SqlParameter { ParameterName = "@deparnamentName", Value = employee.Departament },
             new SqlParameter { ParameterName = "@progLang", Value = employee.PogrammingLanguage }
         };
+
         try
         {
             var res = db.Database.ExecuteSqlRaw("EXEC UpdateEmployee @identy, @name, @surName, @age, @gender, @deparnamentName, @progLang", parms.ToArray());
@@ -178,5 +178,4 @@ public class EmployeeService : IEmployeeService
             return false;
         }
     }
-
 }

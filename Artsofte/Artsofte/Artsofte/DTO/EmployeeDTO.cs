@@ -1,6 +1,5 @@
 ﻿namespace Artsofte.DTO;
 
-
 public class EmployeeDTO
 {
     public int Id { get; set; }

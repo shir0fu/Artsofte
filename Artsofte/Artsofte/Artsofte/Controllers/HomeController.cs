@@ -8,21 +8,25 @@ public class HomeController : Controller
 {
     private readonly IEmployeeService _employeeService;
 
+
     public HomeController(IEmployeeService employeeService)
     {
         _employeeService = employeeService;
     }
+
 
     public async Task<IActionResult> Index()
     {
         return View(await _employeeService.GetEmployeesAsync());
     }
 
+
     [HttpGet("/edit/{id?}")]
     public async Task<IActionResult> UpdateEmployee([FromRoute]int id)
     {
         return View(await _employeeService.GetEmployeeByIdAsync(id));
     }
+
 
     [HttpPost("/edit/{id}")]
     public async Task<IActionResult> UpdateEmployee(UpdateEmployeeDTO updateEmployeeDTO)
@@ -38,11 +42,13 @@ public class HomeController : Controller
         }
     }
 
+
     [HttpGet("/add")]
     public IActionResult AddEmployee()
     {
         return View("AddEmployee");
     }
+
 
     [HttpPost("/add")]
     public async Task<IActionResult> AddEmployee(CreateEmployeeDTO createEmployeeDTO)
@@ -58,6 +64,7 @@ public class HomeController : Controller
         }
     }
 
+
     [HttpPost("/Home/DeleteEmployee/{id}")]
     public async Task<IActionResult> DeleteEmployee([FromRoute]int id)
     {
@@ -71,6 +78,7 @@ public class HomeController : Controller
             return BadRequest();
         }
     }
+
 
     public IActionResult Error()
     {
