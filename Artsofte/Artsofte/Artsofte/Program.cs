@@ -13,16 +13,17 @@ builder.Services.AddMvc();
 
 var app = builder.Build();
 
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseAuthorization();
-
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}");
+pattern: "{controller=Home}/{action=GetEmployeesAsync}");
+
+app.MapControllerRoute(
+name: "default",
+pattern: "{controller=Home}/{action=AddEmployee}");
+
+app.MapControllerRoute(
+name: "default",
+pattern: "{controller=Home}/{action=DeleteEmployeeAsync}/{id?}");
+
 
 app.Run();
